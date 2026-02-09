@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TransactionType } from '../entities/TransactionEntity';
+import { TransactionType } from '../entities/transaction.entity';
 
 export abstract class Transaction {
   public readonly id: string;
