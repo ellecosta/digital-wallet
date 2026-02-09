@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
-import { ComplianceTransaction } from "../../entities/compliance.transaction.entity";
-import { IComplianceTransactionRepository } from "../../repositories/compliance.transaction.repository.interface";
-import { AppDataSource } from "./data.source";
+import { ComplianceTransaction } from "../entities/compliance.transaction.entity";
+import { IComplianceTransactionRepository } from "./compliance.transaction.repository.interface";
+import { AppDataSource } from "../database/data.source";
 
 export class TypeOrmComplianceTransactionRepository implements IComplianceTransactionRepository {
     private repository: Repository<ComplianceTransaction>;

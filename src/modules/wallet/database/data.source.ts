@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { Wallet } from "../../entities/wallet.entity";
-import { Transaction } from "../../entities/transaction.entity";
-import { ComplianceTransaction } from "../../entities/compliance.transaction.entity";
+import { Wallet } from "../entities/wallet.entity";
+import { Transaction } from "../entities/transaction.entity";
+import { ComplianceTransaction } from "../entities/compliance.transaction.entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",

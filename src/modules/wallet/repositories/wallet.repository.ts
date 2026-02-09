@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
-import { Wallet } from "../../entities/wallet.entity";
-import { IWalletRepository } from "../../repositories/wallet.repository.interface";
-import { AppDataSource } from "./data.source";
+import { Wallet } from "../entities/wallet.entity";
+import { IWalletRepository } from "./wallet.repository.interface";
+import { AppDataSource } from "../database/data.source";
 
 export class TypeOrmWalletRepository implements IWalletRepository {
     private repository: Repository<Wallet>; 

@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
-import { Transaction } from "../../entities/transaction.entity";
-import { ITransactionRepository } from "../../repositories/transaction.repository.interface";
-import { AppDataSource } from "./data.source";
+import { Transaction } from "../entities/transaction.entity";
+import { ITransactionRepository } from "./transaction.repository.interface";
+import { AppDataSource } from "../database/data.source";
 
 export class TypeOrmTransactionRepository implements ITransactionRepository {
     private repository: Repository<Transaction>;
