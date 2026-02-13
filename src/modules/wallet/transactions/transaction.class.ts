@@ -37,7 +37,6 @@ export abstract class Transaction {
     if (isNaN(this.amount)) {
       throw new Error('Invalid amount');
     }
-
   }
 
   abstract validate(): void;
