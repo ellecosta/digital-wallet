@@ -6,12 +6,12 @@ import { ComplianceTransaction } from "../entities/compliance.transaction.entity
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "postgres",
-  password: "postgres",
-  database: "wallet",
-  synchronize: true, // só para desenvolvimento
+  host: process.env.DB_HOST || "localhost",
+  port: Number(process.env.DB_PORT) || 5432,
+  username: process.env.DB_USER || "postgres",
+  password: process.env.DB_PASSWORD || "postgres",
+  database: process.env.DB_NAME || "wallet",
+  synchronize: true, 
   logging: false,
   entities: [
     Wallet,
