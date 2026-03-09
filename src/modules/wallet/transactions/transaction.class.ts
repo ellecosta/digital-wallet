@@ -1,6 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { TransactionType } from '../entities/transaction.entity';
 
+export interface Wallet {
+  id: string;
+  balance: number;
+}
+
 export abstract class Transaction {
   public readonly id: string;
   public readonly walletId: string;
@@ -21,11 +26,10 @@ export abstract class Transaction {
     this.type = type;
     this.date = date || new Date();
 
-    this.validateBase(); 
+    this.validateBase();
   }
 
   private validateBase(): void {
-    // Simple validations 
     if (!this.walletId || this.walletId.trim() === '') {
       throw new Error('Wallet ID is required');
     }
@@ -39,17 +43,22 @@ export abstract class Transaction {
     }
   }
 
+  /**
+   * LSP Core: every transaction MUST be executable
+   * without the processor knowing its concrete type
+   */
+  abstract execute(context: {
+    sourceWallet: Wallet;
+    loadWalletById: (id: string) => Promise<Wallet | null>;
+    saveWallet: (wallet: Wallet) => Promise<Wallet>;
+  }): Promise<{ targetWalletId: string | null }>;
+
   abstract validate(): void;
   abstract requiresCompliance(): boolean;
+  abstract getComplianceOperationType(): string;
   abstract getAdditionalData(): Record<string, any>;
 
-  public toObject(): {
-    id: string;
-    walletId: string;
-    amount: number;
-    type: TransactionType;
-    date: Date;
-  } {
+  public toObject() {
     return {
       id: this.id,
       walletId: this.walletId,

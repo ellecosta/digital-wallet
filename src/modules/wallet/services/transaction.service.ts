@@ -58,5 +58,4 @@ export class TransactionService implements ITransactionService {
         date: t.createdAt,
     };
 }
-
 }

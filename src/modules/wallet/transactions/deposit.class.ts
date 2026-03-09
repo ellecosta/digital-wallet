@@ -11,27 +11,39 @@ export class Deposit extends Transaction {
     super(walletId, amount, TransactionType.DEPOSIT, id, date);
   }
 
-  /**
-   * Specific validations for deposit transactions
-   */
   validate(): void {
-    const MAX_DEPOSIT = 1_000_000; // 1 million
-    
+    const MAX_DEPOSIT = 1_000_000;
+
     if (this.amount > MAX_DEPOSIT) {
-      throw new Error(`Deposit cannot exceed ${MAX_DEPOSIT.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`);
+      throw new Error(
+        `Deposit cannot exceed ${MAX_DEPOSIT.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        })}`
+      );
     }
+  }
+
+  async execute({ sourceWallet, saveWallet }: any) {
+    sourceWallet.balance = Number(sourceWallet.balance) + this.amount;
+    await saveWallet(sourceWallet);
+
+    return { targetWalletId: null };
   }
 
   requiresCompliance(): boolean {
     return this.amount > 100_000;
   }
 
+  getComplianceOperationType(): string {
+    return 'LARGE_DEPOSIT';
+  }
+
   getAdditionalData(): Record<string, any> {
     return {
       requiresCompliance: this.requiresCompliance(),
-      complianceReason: this.amount > 100_000 
-        ? 'Deposit above $100,000' 
-        : null,
+      complianceReason:
+        this.amount > 100_000 ? 'Deposit above $100,000' : null,
     };
   }
 }

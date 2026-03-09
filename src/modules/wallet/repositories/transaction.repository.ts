@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
+import { Between } from "typeorm";
 import { Transaction } from "../entities/transaction.entity";
 import { ITransactionRepository } from "./transaction.repository.interface";
 import { AppDataSource } from "../database/data.source";
@@ -23,5 +24,22 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
             relations: ["fromWallet", "toWallet"],
             order: { createdAt: "DESC" }
         });
+    }
+
+    async findByWalletIdAndPeriod(walletId: string, startDate: Date, endDate: Date): Promise<Transaction[]> {
+        return await this.repository.find({
+            where: [
+                {
+                    fromWallet: { id: walletId},
+                    createdAt: Between(startDate, endDate)
+                },
+                {
+                    toWallet: { id: walletId},
+                    createdAt: Between(startDate, endDate)
+                }
+            ],
+            relations: ["fromWallet", "toWallet"],
+            order: { createdAt: "DESC" }
+        })
     }
 }

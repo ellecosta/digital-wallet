@@ -1,4 +1,3 @@
-import { Transaction } from '../entities/transaction.entity';
 import { TransactionDTO } from "../dtos/transaction.dto";
 
 export interface ITransactionService {
@@ -14,3 +13,4 @@ export interface ITransactionService {
 
     getTransactionsByWalletId(walletId: string): Promise<TransactionDTO[]>;
 }
+
