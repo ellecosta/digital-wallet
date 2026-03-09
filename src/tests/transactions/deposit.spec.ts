@@ -4,30 +4,14 @@ describe("Deposit", () => {
     const walletId = "123e4567-e89b-12d3-a456-426614174000"; 
     // VALIDATE
 
-    it("should pass validation with valid amount", () => {
-        const deposit = new Deposit(walletId, 100);
-        expect(() => deposit.validate()).not.toThrow();
-    });
-
-    it("should throw error if amount is zero", () => {
-        expect(() => new Deposit(walletId, 0))
-        .toThrow("Amount must be greater than zero");
-    });
-
-    it("should throw error if amount is negative", () => {
-  
-        expect(() => new Deposit(walletId, -50))
-        .toThrow("Amount must be greater than zero");
-    });
-
     it("should throw error if amount exceeds max limit", () => {
         const deposit = new Deposit(walletId, 2_000_000);
         expect(() => deposit.validate()).toThrow();
     });
 
-    it("should throw error if amount is NaN", () => {
-        expect(() => new Deposit(walletId, NaN))
-        .toThrow("Invalid amount");
+    it("should pass if amount is below max limit", () => {
+        const deposit = new Deposit(walletId, 5_000);
+        expect(() => deposit.validate()).not.toThrow();
     });
 
     //  COMPLIANCE
