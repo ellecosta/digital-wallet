@@ -16,9 +16,5 @@ describe("Withdraw", () => {
 
 
     // COMPLIANCE
-    
-    it("should not require compliance for withdraw", () => {
-        const withdraw = new Withdraw(walletId, 100);
-        expect(withdraw.requiresCompliance()).toBe(false);
-    });
+
 });

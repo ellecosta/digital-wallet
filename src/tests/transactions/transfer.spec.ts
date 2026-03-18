@@ -25,7 +25,7 @@ describe("Transfer", () => {
 
         it("should require compliance for transfers above 5k", () => {
             const transfer = new Transfer(sourceWalletId, sourceWalletId, 6_000);
-            expect(transfer.requiresCompliance()).toBe(true);});
+            expect(transfer.shouldCheckCompliance()).toBe(true);});
 
         // ADITIONAL DATA
         
@@ -33,7 +33,6 @@ describe("Transfer", () => {
             const transfer = new Transfer(sourceWalletId, sourceWalletId, 4_000);
             const data = transfer.getAdditionalData();
             expect(data).toEqual({
-                requiresCompliance: false,
                 complianceReason: null
             });    
         });
@@ -42,7 +41,6 @@ describe("Transfer", () => {
             const transfer = new Transfer(sourceWalletId, sourceWalletId, 6_000);
             const data = transfer.getAdditionalData();
             expect(data).toEqual({
-                requiresCompliance: true,
                 complianceReason: 'Transfer above $5,000' 
             });
         });

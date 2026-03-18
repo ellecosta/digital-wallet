@@ -3,9 +3,15 @@ import { Transaction } from "../../modules/wallet/transactions/transaction.class
 
 class TestTransaction extends Transaction {
     validate(): void {}
-    requiresCompliance(): boolean {
+
+    async execute(): Promise<{ targetWalletId: string | null }> {
+        return { targetWalletId: null };
+    }
+
+    shouldCheckCompliance(): boolean {
         return false;
     }
+
     getAdditionalData(): Record<string, any> {
         return {};
     }

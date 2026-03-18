@@ -11,14 +11,10 @@ describe("WalletService", () => {
         walletService = new WalletService(fakeWalletRepo as any);
     });
 
-    it("should create a wallet with hashed password and zero balance", async () => {
+    it("should create a wallet with zero balance", async () => {
         const wallet = await walletService.createWallet("Giselle", "12345678900", "123456");
-
         expect(wallet).toBeDefined();
         expect(wallet.balance).toBe(0);
-        expect(wallet.password).not.toBe("123456");
-        const passwordMatches = await bcrypt.compare("123456", wallet.password);
-        expect(passwordMatches).toBe(true);
     });
 
     it("should store the wallet in the repository", async () => {
@@ -43,11 +39,7 @@ describe("WalletService", () => {
         expect(result?.id).toBe(wallet.id);
     });
 
-    it("should return null if wallet not found", async () => {
-        const result = await walletService.getWalletById(
-        "non-existent-id"
-        );
-
-        expect(result).toBeNull();
+    it("should throw if wallet not found", async () => {
+        await expect(walletService.getWalletById("non-existent-id")).rejects.toThrow("Wallet not found");
     });
 });

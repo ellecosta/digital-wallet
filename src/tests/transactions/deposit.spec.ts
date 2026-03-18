@@ -18,12 +18,12 @@ describe("Deposit", () => {
 
     it("should not require compliance for small deposits", () => {
         const deposit = new Deposit(walletId, 50_000);
-        expect(deposit.requiresCompliance()).toBe(false);
+        expect(deposit.shouldCheckCompliance()).toBe(false);
     });
 
     it("should require compliance for deposits above 100k", () => {
         const deposit = new Deposit(walletId, 150_000);
-        expect(deposit.requiresCompliance()).toBe(true);
+        expect(deposit.shouldCheckCompliance()).toBe(true);
     });
 
     // ADITIONAL DATA
@@ -32,7 +32,6 @@ describe("Deposit", () => {
         const deposit = new Deposit(walletId, 10_000);
         const data = deposit.getAdditionalData();
         expect(data).toEqual({
-            requiresCompliance: false,
             complianceReason: null
         });
     });
@@ -41,7 +40,6 @@ describe("Deposit", () => {
         const deposit = new Deposit(walletId, 200_000);
         const data = deposit.getAdditionalData();
         expect(data).toEqual({
-            requiresCompliance: true,
             complianceReason: 'Deposit above $100,000'
         });
     });
