@@ -15,7 +15,7 @@ const complianceController =
   new ComplianceTransactionController(complianceService);
 
 router.get(
-  "/compliance",
+  "/",
   complianceController.getAll.bind(complianceController)
 );
 

@@ -13,7 +13,7 @@ const statementController = new StatementController(statementService);
 
 router.get(
     "/:id/",
-    statementController.getStamementByPeriod.bind(statementController)
+    statementController.getStatementByPeriod.bind(statementController)
 );
 
 export default router;
