@@ -10,7 +10,7 @@ export class TypeOrmWalletRepository implements IWalletRepository {
         this.repository = AppDataSource.getRepository(Wallet);
     }
 
-    // Criar nova carteira
+    // Create new wallet
     async create(wallet: Wallet): Promise<Wallet> {
         return await this.repository.save(wallet);
     }
@@ -19,7 +19,7 @@ export class TypeOrmWalletRepository implements IWalletRepository {
         return await this.repository.findOneBy({ id });
     }
     
-    // Atualizar carteira existente
+    // Update existing wallet
     async save(wallet: Wallet): Promise<Wallet> {
         return await this.repository.save(wallet);
     }   

@@ -1,7 +1,8 @@
 import { Repository } from "typeorm";
-import { Between } from "typeorm";
+import { Between, MoreThanOrEqual} from "typeorm";
 import { Transaction } from "../entities/transaction.entity";
 import { ITransactionRepository } from "./transaction.repository.interface";
+import { TransactionType } from "../entities/transaction.entity";
 import { AppDataSource } from "../database/data.source";
 
 export class TypeOrmTransactionRepository implements ITransactionRepository {
@@ -42,4 +43,16 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
             order: { createdAt: "DESC" }
         })
     }
+
+    async findRecentWithdraws(walletId: string, amount: number, startDate: Date): Promise<Transaction[]> {
+        return await this.repository.find({
+            where: {
+                fromWallet: { id: walletId },
+                type: TransactionType.WITHDRAW,
+                amount,
+                createdAt: MoreThanOrEqual(startDate),
+            },
+            order: { createdAt: "DESC" },
+        });
+    }  
 }
