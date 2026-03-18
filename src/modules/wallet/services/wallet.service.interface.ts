@@ -1,3 +1,4 @@
+import { WalletDTO } from "../dtos/wallet.dto";
 import { Wallet } from "../entities/wallet.entity";
 
 export interface IWalletService {
@@ -5,7 +6,7 @@ export interface IWalletService {
         name: string,
         cpf: string,
         password: string
-    ): Promise<Wallet>;
+    ): Promise<WalletDTO>;
 
-    getWalletById(id: string): Promise<Wallet | null>;
+    getWalletById(id: string): Promise<WalletDTO>;
 }

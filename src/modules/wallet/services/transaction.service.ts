@@ -50,12 +50,12 @@ export class TransactionService implements ITransactionService {
     }
 
     private toDTO(t: Transaction): TransactionDTO {
-    return {
-        id: t.id,
-        walletId: t.fromWallet.id,
-        amount: t.amount,
-        type: t.type,
-        date: t.createdAt,
-    };
-}
+        return {
+            id: t.id,
+            walletId: t.fromWallet.id,
+            amount: t.amount,
+            type: t.type,
+            date: t.createdAt,
+        };
+    }
 }
