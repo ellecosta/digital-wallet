@@ -11,10 +11,7 @@ export class ComplianceTransactionController {
             const compliances = await this.complianceTransactionService.getAll();
             return res.status(200).json(compliances);
         } catch (error: any) {
-            return res.status(500).json({
-                message: "Error fetching compliance transactions",
-                error: error.message,
-            });
-        }
+            return res.status(400).json({ error: error.message });
+        };
     }
 }
