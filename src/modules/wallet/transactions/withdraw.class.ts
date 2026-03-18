@@ -20,22 +20,18 @@ export class Withdraw extends Transaction {
   }
 
   async execute({ sourceWallet, saveWallet }: any) {
-    if (sourceWallet.balance < this.amount) {
+    if (Number(sourceWallet.balance) < this.amount) {
       throw new Error('Insufficient balance');
     }
 
-    sourceWallet.balance -= this.amount;
+    sourceWallet.balance = Number(sourceWallet.balance) - this.amount;
     await saveWallet(sourceWallet);
 
     return { targetWalletId: null };
   }
 
-  requiresCompliance(): boolean {
-    return false; // still handled externally by history rule
-  }
-
-  getComplianceOperationType(): string {
-    return 'MULTIPLE_WITHDRAWALS';
+  shouldCheckCompliance(): boolean {
+    return true; // must check records
   }
 
   getAdditionalData(): Record<string, any> {

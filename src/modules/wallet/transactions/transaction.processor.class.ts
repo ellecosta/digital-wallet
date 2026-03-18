@@ -1,4 +1,5 @@
 import { Transaction } from "./transaction.class";
+import { TransactionType } from '../entities/transaction.entity';
 
 import { ITransactionRepository } from "../repositories/transaction.repository.interface";
 import { IComplianceTransactionRepository } from "../repositories/compliance.transaction.repository.interface";
@@ -29,10 +30,8 @@ export class TransactionProcessor {
     // 3. Execute transaction (LSP CORE)
     const { targetWalletId } = await transaction.execute({
       sourceWallet: wallet,
-      loadWalletById: (id: string) =>
-        this.walletRepository.findById(id),
-      saveWallet: (wallet: any) =>
-        this.walletRepository.save(wallet),
+      loadWalletById: (id: string) => this.walletRepository.findById(id),
+      saveWallet: (wallet: any) => this.walletRepository.save(wallet),
     });
 
     // 4. Save transaction (no instanceof)
@@ -46,37 +45,50 @@ export class TransactionProcessor {
         : null,
     } as any);
 
-    // 5. Compliance (fully polymorphic)
-    if (transaction.requiresCompliance()) {
-      await this.registerCompliance(
-        transaction,
-        targetWalletId
-      );
-    }
+    // 5. Compliance 
+    await this.handleCompliance(transaction, targetWalletId);
   }
 
-  private async registerCompliance(
-    transaction: Transaction,
-    toWalletId: string | null
-  ): Promise<void> {
+  private async handleCompliance(transaction: Transaction, toWalletId: string | null): Promise<void> {
+    if (!transaction.shouldCheckCompliance())
+      return;
+
+    // TRANSFER
+    if (transaction.type === TransactionType.TRANSFER) {
+      await this.registerCompliance(transaction, toWalletId, "LARGE_TRANSFER");
+      return;
+    }
+
+    // DEPOSIT
+    if (transaction.type === TransactionType.DEPOSIT) {
+      await this.registerCompliance(transaction, toWalletId, "LARGE_DEPOSIT");
+      return;
+    }
+
+    // WITHDRAW
+    if (transaction.type === TransactionType.WITHDRAW) {
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+      const withdraws = await this.transactionRepository.findRecentWithdraws(transaction.walletId, transaction.amount, fiveMinutesAgo);
+
+      if (withdraws.length >= 3) {
+        await this.registerCompliance(transaction, toWalletId, "MULTIPLE_WITHDRAWALS"
+      );
+    }
+ } 
+
+}
+  private async registerCompliance(transaction: Transaction, toWalletId: string | null, operationType: string): Promise<void> {
     const compliance = new ComplianceTransaction();
 
     compliance.amount = transaction.amount;
-    compliance.operationType =
-      transaction.getComplianceOperationType() as any;
-
-    compliance.sourceWallet = {
-      id: transaction.walletId,
-    } as any;
+    compliance.operationType = operationType as any;
+    compliance.sourceWallet = {id: transaction.walletId } as any;
 
     if (toWalletId) {
-      compliance.targetWallet = {
-        id: toWalletId,
-      } as any;
+      compliance.targetWallet = {id: toWalletId} as any;
     }
 
-    await this.complianceTransactionRepository.create(
-      compliance
-    );
+    await this.complianceTransactionRepository.create(compliance);
   }
 }

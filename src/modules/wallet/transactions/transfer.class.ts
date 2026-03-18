@@ -33,7 +33,7 @@ export class Transfer extends Transaction {
     loadWalletById,
     saveWallet,
   }: any) {
-    if (sourceWallet.balance < this.amount) {
+    if (Number(sourceWallet.balance) < this.amount) {
       throw new Error('Insufficient balance');
     }
 
@@ -45,9 +45,8 @@ export class Transfer extends Transaction {
       throw new Error('Destination wallet not found');
     }
 
-    sourceWallet.balance -= this.amount;
-    destinationWallet.balance =
-      Number(destinationWallet.balance) + this.amount;
+    sourceWallet.balance = Number(sourceWallet.balance) - this.amount;
+    destinationWallet.balance = Number(destinationWallet.balance) + this.amount;
 
     await saveWallet(sourceWallet);
     await saveWallet(destinationWallet);
@@ -55,17 +54,12 @@ export class Transfer extends Transaction {
     return { targetWalletId: this.destinationWalletId };
   }
 
-  requiresCompliance(): boolean {
+  shouldCheckCompliance(): boolean {
     return this.amount > 5_000;
-  }
-
-  getComplianceOperationType(): string {
-    return 'LARGE_TRANSFER';
   }
 
   getAdditionalData(): Record<string, any> {
     return {
-      requiresCompliance: this.requiresCompliance(),
       complianceReason:
         this.amount > 5_000 ? 'Transfer above $5,000' : null,
     };

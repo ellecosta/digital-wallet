@@ -34,13 +34,13 @@ export abstract class Transaction {
       throw new Error('Wallet ID is required');
     }
 
-    if (this.amount <= 0) {
-      throw new Error('Amount must be greater than zero');
-    }
-
     if (isNaN(this.amount)) {
       throw new Error('Invalid amount');
     }
+
+    if (this.amount <= 0) {
+      throw new Error('Amount must be greater than zero');
+    } 
   }
 
   /**
@@ -54,8 +54,9 @@ export abstract class Transaction {
   }): Promise<{ targetWalletId: string | null }>;
 
   abstract validate(): void;
-  abstract requiresCompliance(): boolean;
-  abstract getComplianceOperationType(): string;
+
+  abstract shouldCheckCompliance(): boolean; // indicates whether compliance should be checked
+
   abstract getAdditionalData(): Record<string, any>;
 
   public toObject() {

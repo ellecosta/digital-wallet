@@ -27,21 +27,15 @@ export class Deposit extends Transaction {
   async execute({ sourceWallet, saveWallet }: any) {
     sourceWallet.balance = Number(sourceWallet.balance) + this.amount;
     await saveWallet(sourceWallet);
-
     return { targetWalletId: null };
   }
 
-  requiresCompliance(): boolean {
+  shouldCheckCompliance(): boolean {
     return this.amount > 100_000;
-  }
-
-  getComplianceOperationType(): string {
-    return 'LARGE_DEPOSIT';
   }
 
   getAdditionalData(): Record<string, any> {
     return {
-      requiresCompliance: this.requiresCompliance(),
       complianceReason:
         this.amount > 100_000 ? 'Deposit above $100,000' : null,
     };
