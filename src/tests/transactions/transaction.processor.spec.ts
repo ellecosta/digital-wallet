@@ -17,6 +17,19 @@ describe("TransactionProcessor", () => {
     const destinationWalletId = "9f1c2b4a-7d83-4e6f-b2c9-5a8d3e1f7c62"
 
     beforeEach(() => {
+        const fakeQueryRunner = {
+            connect: jest.fn().mockResolvedValue(undefined),
+            startTransaction: jest.fn().mockResolvedValue(undefined),
+            commitTransaction: jest.fn().mockResolvedValue(undefined),
+            rollbackTransaction: jest.fn().mockResolvedValue(undefined),
+            release: jest.fn().mockResolvedValue(undefined),
+            manager: {} as any,
+        };
+
+        const fakeDataSource = {
+            createQueryRunner: () => fakeQueryRunner,
+        } as any;
+
         fakeTransactionRepo = new FakeTransactionRepository();
         fakeComplianceRepo = new FakeComplianceRepository();
         fakeWalletRepo = new FakeWalletRepository();
@@ -24,7 +37,8 @@ describe("TransactionProcessor", () => {
         processor = new TransactionProcessor(
             fakeTransactionRepo as any,
             fakeComplianceRepo  as any,
-            fakeWalletRepo as any
+            fakeWalletRepo as any,
+            fakeDataSource
         );
     });
 
