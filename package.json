@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:coverage": "jest --coverage",
+    "test": "jest --config jest.unit.config.js && jest --config jest.integration.config.js --runInBand",
+    "test:coverage": "jest --config jest.unit.config.js --coverage && jest --config jest.integration.config.js --coverage --runInBand",
+    "test:unit": "jest --config jest.unit.config.js",
+    "test:integration": "jest --config jest.integration.config.js --runInBand",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js"
@@ -27,6 +29,7 @@
     "express": "^5.2.1",
     "pg": "^8.18.0",
     "reflect-metadata": "^0.2.2",
+    "supertest": "^7.2.2",
     "typeorm": "^0.3.28",
     "zod": "^4.3.6"
   },
@@ -36,6 +39,7 @@
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.2.0",
+    "@types/supertest": "^7.2.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",

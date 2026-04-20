@@ -20,11 +20,10 @@ export class StatementService implements IStatementService {
         }
 
         const startDate = new Date();
-        const endDate = new Date();
 
         startDate.setDate(startDate.getDate() - period);
 
-        const transactions = await this.transactionRepository.findByWalletIdAndPeriod(walletId, startDate, endDate);
+        const transactions = await this.transactionRepository.findByWalletIdAndPeriod(walletId, startDate);
         return this.toDTO(wallet, transactions);      
     }
 

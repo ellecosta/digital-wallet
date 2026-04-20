@@ -31,12 +31,12 @@ export class WalletController {
         try {
             const data = walletIdParamSchema.parse(req.params);
             const wallet = await this.walletService.getWalletById(data.id);
-
-            if (!wallet) {
-                return res.status(404).json({ error: 'Wallet not found' });
-            }
             return res.json(wallet); 
+
         } catch (error: any) {
+            if (error.message === 'Wallet not found') {
+                return res.status(404).json({ error: error.message });
+            }
             return res.status(400).json({ error: error.message });
         }
     }

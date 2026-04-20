@@ -4,6 +4,7 @@ import { Transaction } from "../entities/transaction.entity";
 import { ITransactionRepository } from "./transaction.repository.interface";
 import { TransactionType } from "../entities/transaction.entity";
 import { AppDataSource } from "../database/data.source";
+import { EntityManager } from "typeorm";
 
 export class TypeOrmTransactionRepository implements ITransactionRepository {
     private repository: Repository<Transaction>;
@@ -12,8 +13,9 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
         this.repository = AppDataSource.getRepository(Transaction);
     }
 
-    async create(transaction: Transaction): Promise<Transaction> { 
-        return await this.repository.save(transaction);
+    async create(transaction: Transaction, manager?: EntityManager): Promise<Transaction> { 
+        const repo = manager ? manager.getRepository(Transaction) : this.repository;
+        return await repo.save(transaction);
     }   
 
     async findByWalletId(walletId: string): Promise<Transaction[]> {
@@ -27,16 +29,16 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
         });
     }
 
-    async findByWalletIdAndPeriod(walletId: string, startDate: Date, endDate: Date): Promise<Transaction[]> {
+    async findByWalletIdAndPeriod(walletId: string, startDate: Date): Promise<Transaction[]> {
         return await this.repository.find({
             where: [
                 {
                     fromWallet: { id: walletId},
-                    createdAt: Between(startDate, endDate)
+                    createdAt: MoreThanOrEqual(startDate)
                 },
                 {
                     toWallet: { id: walletId},
-                    createdAt: Between(startDate, endDate)
+                    createdAt: MoreThanOrEqual(startDate)
                 }
             ],
             relations: ["fromWallet", "toWallet"],
@@ -44,15 +46,15 @@ export class TypeOrmTransactionRepository implements ITransactionRepository {
         })
     }
 
-    async findRecentWithdraws(walletId: string, amount: number, startDate: Date): Promise<Transaction[]> {
-        return await this.repository.find({
+    async findRecentWithdraws(walletId: string, amount: number, startDate: Date, manager?: EntityManager): Promise<Transaction[]> {
+        const repo = manager ? manager.getRepository(Transaction) : this.repository;
+        return await repo.find({
             where: {
                 fromWallet: { id: walletId },
                 type: TransactionType.WITHDRAW,
                 amount,
                 createdAt: MoreThanOrEqual(startDate),
             },
-            order: { createdAt: "DESC" },
         });
     }  
 }

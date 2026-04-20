@@ -1,7 +1,7 @@
 export class FakeTransactionRepository {
     transactions: any[] = [];
 
-    async create(transaction: any) {
+    async create(transaction: any, manager?: any) {
         this.transactions.push({
             ...transaction,
             createdAt: transaction.createdAt || new Date(),
@@ -25,7 +25,7 @@ export class FakeTransactionRepository {
         );
     }
 
-    async findRecentWithdraws(walletId: string, amount: number, startDate: Date) {
+    async findRecentWithdraws(walletId: string, amount: number, startDate: Date, manager?: any) {
         return this.transactions.filter(
             (t) =>
             t.fromWallet?.id === walletId &&
