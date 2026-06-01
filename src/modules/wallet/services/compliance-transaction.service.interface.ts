@@ -1,5 +1,5 @@
 import { ComplianceTransactionDTO } from "../dtos/compliance-transaction.dto";
 
 export interface IComplianceTransactionService {
-    getAll(): Promise<ComplianceTransactionDTO[]>;
+  getAll(): Promise<ComplianceTransactionDTO[]>;
 }

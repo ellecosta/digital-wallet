@@ -4,11 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-@Entity('wallets')
+@Entity("wallets")
 export class Wallet {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @Column({ unique: true })
@@ -20,7 +20,7 @@ export class Wallet {
   @Column()
   password!: string; // hash of the password
 
-  @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0 })
   balance!: number;
 
   @CreateDateColumn()

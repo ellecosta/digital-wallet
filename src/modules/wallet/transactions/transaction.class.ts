@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import { TransactionType } from '../entities/transaction.entity';
+import { v4 as uuidv4 } from "uuid";
+import { TransactionType } from "../entities/transaction.entity";
 
 export interface Wallet {
   id: string;
@@ -18,7 +18,7 @@ export abstract class Transaction {
     amount: number,
     type: TransactionType,
     id?: string,
-    date?: Date
+    date?: Date,
   ) {
     this.id = id || uuidv4();
     this.walletId = walletId;
@@ -30,17 +30,17 @@ export abstract class Transaction {
   }
 
   private validateBase(): void {
-    if (!this.walletId || this.walletId.trim() === '') {
-      throw new Error('Wallet ID is required');
+    if (!this.walletId || this.walletId.trim() === "") {
+      throw new Error("Wallet ID is required");
     }
 
     if (isNaN(this.amount)) {
-      throw new Error('Invalid amount');
+      throw new Error("Invalid amount");
     }
 
     if (this.amount <= 0) {
-      throw new Error('Amount must be greater than zero');
-    } 
+      throw new Error("Amount must be greater than zero");
+    }
   }
 
   /**

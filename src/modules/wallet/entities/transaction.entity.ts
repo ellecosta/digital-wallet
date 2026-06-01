@@ -4,28 +4,28 @@ import {
   Column,
   CreateDateColumn,
   ManyToOne,
-} from 'typeorm';
-import { Wallet } from './wallet.entity';
+} from "typeorm";
+import { Wallet } from "./wallet.entity";
 
 export enum TransactionType {
-  DEPOSIT = 'DEPOSIT',
-  WITHDRAW = 'WITHDRAW',
-  TRANSFER = 'TRANSFER',
+  DEPOSIT = "DEPOSIT",
+  WITHDRAW = "WITHDRAW",
+  TRANSFER = "TRANSFER",
 }
 
-@Entity('transactions')
+@Entity("transactions")
 export class Transaction {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: TransactionType,
   })
   type!: TransactionType;
 
   @Column({
-    type: 'decimal',
+    type: "decimal",
     precision: 15,
     scale: 2,
   })

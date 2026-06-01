@@ -1,13 +1,8 @@
-import { Transaction } from './transaction.class';
-import { TransactionType } from '../entities/transaction.entity';
+import { Transaction } from "./transaction.class";
+import { TransactionType } from "../entities/transaction.entity";
 
 export class Deposit extends Transaction {
-  constructor(
-    walletId: string,
-    amount: number,
-    id?: string,
-    date?: Date
-  ) {
+  constructor(walletId: string, amount: number, id?: string, date?: Date) {
     super(walletId, amount, TransactionType.DEPOSIT, id, date);
   }
 
@@ -16,10 +11,10 @@ export class Deposit extends Transaction {
 
     if (this.amount > MAX_DEPOSIT) {
       throw new Error(
-        `Deposit cannot exceed ${MAX_DEPOSIT.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        })}`
+        `Deposit cannot exceed ${MAX_DEPOSIT.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        })}`,
       );
     }
   }
@@ -36,8 +31,7 @@ export class Deposit extends Transaction {
 
   getAdditionalData(): Record<string, any> {
     return {
-      complianceReason:
-        this.amount > 100_000 ? 'Deposit above $100,000' : null,
+      complianceReason: this.amount > 100_000 ? "Deposit above $100,000" : null,
     };
   }
 }

@@ -1,13 +1,8 @@
-import { Transaction } from './transaction.class';
-import { TransactionType } from '../entities/transaction.entity';
+import { Transaction } from "./transaction.class";
+import { TransactionType } from "../entities/transaction.entity";
 
 export class Withdraw extends Transaction {
-  constructor(
-    walletId: string,
-    amount: number,
-    id?: string,
-    date?: Date
-  ) {
+  constructor(walletId: string, amount: number, id?: string, date?: Date) {
     super(walletId, amount, TransactionType.WITHDRAW, id, date);
   }
 
@@ -21,7 +16,7 @@ export class Withdraw extends Transaction {
 
   async execute({ sourceWallet, saveWallet }: any) {
     if (Number(sourceWallet.balance) < this.amount) {
-      throw new Error('Insufficient balance');
+      throw new Error("Insufficient balance");
     }
 
     sourceWallet.balance = Number(sourceWallet.balance) - this.amount;

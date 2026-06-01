@@ -1,5 +1,5 @@
 import { Transaction } from "./transaction.class";
-import { TransactionType } from '../entities/transaction.entity';
+import { TransactionType } from "../entities/transaction.entity";
 import { ITransactionRepository } from "../repositories/transaction.repository.interface";
 import { IComplianceTransactionRepository } from "../repositories/compliance.transaction.repository.interface";
 import { IWalletRepository } from "../repositories/wallet.repository.interface";
@@ -12,7 +12,7 @@ export class TransactionProcessor {
     private transactionRepository: ITransactionRepository,
     private complianceTransactionRepository: IComplianceTransactionRepository,
     private walletRepository: IWalletRepository,
-    private dataSource: DataSource = AppDataSource
+    private dataSource: DataSource = AppDataSource,
   ) {}
 
   async process(transaction: Transaction): Promise<void> {
@@ -28,7 +28,8 @@ export class TransactionProcessor {
 
       // 2. Load wallet (with lock)
       const wallet = await this.walletRepository.findById(
-        transaction.walletId, manager
+        transaction.walletId,
+        manager,
       );
       if (!wallet) {
         throw new Error("Wallet not found");
@@ -37,23 +38,26 @@ export class TransactionProcessor {
       // 3. Execute transaction (LSP CORE)
       const { targetWalletId } = await transaction.execute({
         sourceWallet: wallet,
-        loadWalletById: (id: string) => this.walletRepository.findById(id, manager),
-        saveWallet: (wallet: any) => this.walletRepository.save(wallet, manager),
+        loadWalletById: (id: string) =>
+          this.walletRepository.findById(id, manager),
+        saveWallet: (wallet: any) =>
+          this.walletRepository.save(wallet, manager),
       });
 
       // 4. Save transaction (no instanceof)
-      await this.transactionRepository.create({
-        id: transaction.id,
-        amount: transaction.amount,
-        type: transaction.type,
-        fromWallet: { id: transaction.walletId } as any,
-        toWallet: targetWalletId
-          ? { id: targetWalletId }
-          : null,
-      } as any, manager);
+      await this.transactionRepository.create(
+        {
+          id: transaction.id,
+          amount: transaction.amount,
+          type: transaction.type,
+          fromWallet: { id: transaction.walletId } as any,
+          toWallet: targetWalletId ? { id: targetWalletId } : null,
+        } as any,
+        manager,
+      );
 
-      // 5. Compliance 
-      await this.handleCompliance(transaction, targetWalletId, manager);  
+      // 5. Compliance
+      await this.handleCompliance(transaction, targetWalletId, manager);
 
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -64,19 +68,32 @@ export class TransactionProcessor {
     }
   }
 
-  private async handleCompliance(transaction: Transaction, toWalletId: string | null, manager: EntityManager): Promise<void> {
-    if (!transaction.shouldCheckCompliance())
-      return;
+  private async handleCompliance(
+    transaction: Transaction,
+    toWalletId: string | null,
+    manager: EntityManager,
+  ): Promise<void> {
+    if (!transaction.shouldCheckCompliance()) return;
 
     // TRANSFER
     if (transaction.type === TransactionType.TRANSFER) {
-      await this.registerCompliance(transaction, toWalletId, "LARGE_TRANSFER", manager);
+      await this.registerCompliance(
+        transaction,
+        toWalletId,
+        "LARGE_TRANSFER",
+        manager,
+      );
       return;
     }
 
     // DEPOSIT
     if (transaction.type === TransactionType.DEPOSIT) {
-      await this.registerCompliance(transaction, toWalletId, "LARGE_DEPOSIT", manager);
+      await this.registerCompliance(
+        transaction,
+        toWalletId,
+        "LARGE_DEPOSIT",
+        manager,
+      );
       return;
     }
 
@@ -84,23 +101,37 @@ export class TransactionProcessor {
     if (transaction.type === TransactionType.WITHDRAW) {
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-      const withdraws = await this.transactionRepository.findRecentWithdraws(transaction.walletId, transaction.amount, fiveMinutesAgo, manager);
+      const withdraws = await this.transactionRepository.findRecentWithdraws(
+        transaction.walletId,
+        transaction.amount,
+        fiveMinutesAgo,
+        manager,
+      );
 
       if (withdraws.length >= 3) {
-        await this.registerCompliance(transaction, toWalletId, "MULTIPLE_WITHDRAWALS", manager);
+        await this.registerCompliance(
+          transaction,
+          toWalletId,
+          "MULTIPLE_WITHDRAWALS",
+          manager,
+        );
+      }
     }
- } 
-
-}
-  private async registerCompliance(transaction: Transaction, toWalletId: string | null, operationType: string, manager: EntityManager): Promise<void> {
+  }
+  private async registerCompliance(
+    transaction: Transaction,
+    toWalletId: string | null,
+    operationType: string,
+    manager: EntityManager,
+  ): Promise<void> {
     const compliance = new ComplianceTransaction();
 
     compliance.amount = transaction.amount;
     compliance.operationType = operationType as any;
-    compliance.sourceWallet = {id: transaction.walletId } as any;
+    compliance.sourceWallet = { id: transaction.walletId } as any;
 
     if (toWalletId) {
-      compliance.targetWallet = {id: toWalletId} as any;
+      compliance.targetWallet = { id: toWalletId } as any;
     }
 
     await this.complianceTransactionRepository.create(compliance, manager);

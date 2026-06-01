@@ -1,3 +1,3 @@
 export interface StatementQuery {
-    period: number;
+  period: number;
 }

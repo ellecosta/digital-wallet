@@ -1,8 +1,8 @@
 import express from "express";
 import walletRoutes from "./modules/wallet/routes/wallet.routes";
 import transactionRoutes from "./modules/wallet/routes/transaction.routes";
-import complianceTransactionRoutes from "./modules/wallet/routes/compliance-transactions.routes"
-import statementRoutes from "./modules/wallet/routes/statement.routes"
+import complianceTransactionRoutes from "./modules/wallet/routes/compliance-transactions.routes";
+import statementRoutes from "./modules/wallet/routes/statement.routes";
 
 const app = express();
 

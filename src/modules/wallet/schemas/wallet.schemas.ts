@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // --------------------
 // CPF validation
@@ -38,7 +38,7 @@ function isValidCPF(cpf: string): boolean {
 
 const cpfSchema = z
   .string()
-  .transform((val) => val.replace(/\D/g, "")) 
+  .transform((val) => val.replace(/\D/g, ""))
   .refine((val) => val.length === 11, {
     message: "CPF must have exactly 11 digits",
   })
@@ -51,10 +51,7 @@ const cpfSchema = z
 // --------------------
 
 export const createWalletSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .trim(),
+  name: z.string().min(1, "Name is required").trim(),
 
   cpf: cpfSchema,
 

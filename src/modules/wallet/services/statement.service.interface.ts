@@ -1,6 +1,8 @@
 import { StatementDTO } from "../dtos/statement.dto";
 
 export interface IStatementService {
-    getStatementByPeriod(walletId: string, period: number): Promise<StatementDTO | null>;
+  getStatementByPeriod(
+    walletId: string,
+    period: number,
+  ): Promise<StatementDTO | null>;
 }
-

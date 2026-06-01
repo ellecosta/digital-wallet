@@ -1,5 +1,5 @@
-import { Transaction } from './transaction.class';
-import { TransactionType } from '../entities/transaction.entity';
+import { Transaction } from "./transaction.class";
+import { TransactionType } from "../entities/transaction.entity";
 
 export class Transfer extends Transaction {
   public readonly destinationWalletId: string;
@@ -9,7 +9,7 @@ export class Transfer extends Transaction {
     destinationWalletId: string,
     amount: number,
     id?: string,
-    date?: Date
+    date?: Date,
   ) {
     super(sourceWalletId, amount, TransactionType.TRANSFER, id, date);
     this.destinationWalletId = destinationWalletId;
@@ -17,9 +17,7 @@ export class Transfer extends Transaction {
 
   validate(): void {
     if (this.walletId === this.destinationWalletId) {
-      throw new Error(
-        'Source and destination wallets must be different'
-      );
+      throw new Error("Source and destination wallets must be different");
     }
 
     const MIN_TRANSFER = 5;
@@ -28,21 +26,15 @@ export class Transfer extends Transaction {
     }
   }
 
-  async execute({
-    sourceWallet,
-    loadWalletById,
-    saveWallet,
-  }: any) {
+  async execute({ sourceWallet, loadWalletById, saveWallet }: any) {
     if (Number(sourceWallet.balance) < this.amount) {
-      throw new Error('Insufficient balance');
+      throw new Error("Insufficient balance");
     }
 
-    const destinationWallet = await loadWalletById(
-      this.destinationWalletId
-    );
+    const destinationWallet = await loadWalletById(this.destinationWalletId);
 
     if (!destinationWallet) {
-      throw new Error('Destination wallet not found');
+      throw new Error("Destination wallet not found");
     }
 
     sourceWallet.balance = Number(sourceWallet.balance) - this.amount;
@@ -60,8 +52,7 @@ export class Transfer extends Transaction {
 
   getAdditionalData(): Record<string, any> {
     return {
-      complianceReason:
-        this.amount > 5_000 ? 'Transfer above $5,000' : null,
+      complianceReason: this.amount > 5_000 ? "Transfer above $5,000" : null,
     };
   }
 

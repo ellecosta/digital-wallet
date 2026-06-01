@@ -1,9 +1,9 @@
 export interface WalletIdParams {
-    id: string;
+  id: string;
 }
 
 export interface CreateWalletBody {
-    name: string;
-    cpf: string;
-    password: string;
+  name: string;
+  cpf: string;
+  password: string;
 }

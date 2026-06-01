@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: wallet
     ports:
       - "5432:5432"
-  
+
   db_test:
     image: postgres:15
     container_name: wallet_db_test
