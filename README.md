@@ -1,5 +1,13 @@
 # Digital Wallet
 
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Express_5-339933?logo=node.js&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)
+![TypeORM](https://img.shields.io/badge/TypeORM-0.3-FE0803?logo=typeorm&logoColor=white)
+![Jest](https://img.shields.io/badge/Tested_with-Jest-C21325?logo=jest&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![Architecture](https://img.shields.io/badge/Architecture-SOLID-4B32C3)
+
 ## O que é o projeto
 
 É uma API de carteira digital (carteira financeira) que gerencia carteiras de usuários e processa transações financeiras com monitoramento de compliance.

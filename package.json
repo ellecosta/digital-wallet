@@ -1,7 +1,7 @@
 {
   "name": "digital-wallet",
   "version": "1.0.0",
-  "description": "",
+  "description": "API REST de carteira financeira em TypeScript com transações atômicas (pessimistic locking), monitoramento de compliance e arquitetura em camadas baseada em SOLID.",
   "main": "index.js",
   "scripts": {
     "test": "jest --config jest.unit.config.js && jest --config jest.integration.config.js --runInBand",
@@ -20,8 +20,19 @@
     "type": "git",
     "url": "git+https://github.com/ellecosta/digital-wallet.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "typescript",
+    "nodejs",
+    "express",
+    "typeorm",
+    "postgresql",
+    "digital-wallet",
+    "fintech",
+    "solid",
+    "clean-architecture",
+    "jest"
+  ],
+  "author": "Giselle Costa",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ellecosta/digital-wallet/issues"
