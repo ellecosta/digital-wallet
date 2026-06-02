@@ -110,17 +110,17 @@ Isso é possível graças ao contrato definido na classe abstrata (`transaction.
 ## O que pode melhorar
 
 * **Uso de `synchronize: true`:**
-  Em produção é perigoso, pois pode alterar ou dropar o schema. O ideal é usar **migrations do TypeORM**.
+  Aprendi que em produção é perigoso, pois pode alterar ou dropar o schema. O ideal é usar **migrations do TypeORM**.
 
 * **Tratamento de erros:**
-  Atualmente os controllers retornam sempre `400`. O ideal é:
+  Atualmente os controllers retornam sempre `400`. Melhorias futuras:
 
   * Criar classes de erro de domínio
   * Implementar um middleware global de erro no Express
   * Retornar status codes apropriados
 
 * **Tipo do balance:**
-  O `decimal` do PostgreSQL retorna como string no TypeORM. Para valores monetários:
+  O `decimal` do PostgreSQL retorna como string no TypeORM. Para valores monetários, opções mais viáveis:
 
   * Usar um **Value Object de Money**, ou
   * Trabalhar com inteiros (ex: centavos)
